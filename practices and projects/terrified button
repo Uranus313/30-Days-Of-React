@@ -8,11 +8,12 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 const MakeScaredButton = function(props){
   let [text,setText] = useState("Catch me if you can")
   let [location,setLocation] = useState({left : 0,top : 0})
-  let findSafeLocation = function(event){
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  let findSafeLocation = function(){
     let windowHeight = window.innerHeight;
     let windowWidth = window.innerWidth;
-    let mouseX = event.clientX;
-    let mouseY = event.clientY;
+    let mouseX = mousePosition.x;
+    let mouseY = mousePosition.y;
     let safeX = 0;
     let safeY = 0;
 
@@ -31,19 +32,28 @@ const MakeScaredButton = function(props){
       }
     }
   }
-  // let setText = function(newText){
-  //   text = newText
-  // }
-  
-  // let [{left , top},setLocation] = useEffect(0,0)
-  // useEffect({
 
-  // },[])
-  // [location,seLocation]
-  // const updateLocation = function()
+  const handleMouseMove = (event) => {
+    setMousePosition({
+      x: event.clientX,
+      y: event.clientY
+    });
+  }
+  const handleWindowSizeChange = () => {
+    findSafeLocation()
+    
+  };
+  useEffect(() => {
+      window.addEventListener('resize', handleWindowSizeChange);
+      window.addEventListener('mousemove', handleMouseMove);
+      return () => {
+          window.removeEventListener('resize', handleWindowSizeChange);
+          window.removeEventListener('mousemove', handleMouseMove);
+      };
+    }, []);
   return <button style={{backgroundColor : "aqua", outline:"none",border:"none",width:"300px",height:"50px",
   position : 'absolute', left : location.left +"px",top: location.top+"px"}} onClick={() =>setText("I'm caught")}
-  onMouseEnter={(event) => findSafeLocation(event)}>
+  onMouseEnter={() => findSafeLocation()}>
     {text}
     </button>
 }
@@ -53,7 +63,5 @@ root.render(
   </React.StrictMode>
 );
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
+
 
