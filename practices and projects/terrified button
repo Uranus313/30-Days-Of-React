@@ -1,0 +1,59 @@
+import React, { useEffect, useState } from 'react';
+import ReactDOM from 'react-dom/client';
+// import './index.css';
+// import App from './App';
+// import reportWebVitals from './reportWebVitals';
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+const MakeScaredButton = function(props){
+  let [text,setText] = useState("Catch me if you can")
+  let [location,setLocation] = useState({left : 0,top : 0})
+  let findSafeLocation = function(event){
+    let windowHeight = window.innerHeight;
+    let windowWidth = window.innerWidth;
+    let mouseX = event.clientX;
+    let mouseY = event.clientY;
+    let safeX = 0;
+    let safeY = 0;
+
+    if(windowHeight < 101 && windowWidth < 601){
+      setText("I have no where to run");
+      return
+    }
+    
+    while(true){
+      safeX = Math.floor(Math.random()*(windowWidth-299));
+      safeY = Math.floor(Math.random()*(windowHeight-49));
+      if(mouseX<safeX || mouseX>safeX+300 || mouseY<safeY || mouseY>safeY+300){
+        setLocation({left : safeX,top : safeY});
+        setText("Catch me if you can")
+        return
+      }
+    }
+  }
+  // let setText = function(newText){
+  //   text = newText
+  // }
+  
+  // let [{left , top},setLocation] = useEffect(0,0)
+  // useEffect({
+
+  // },[])
+  // [location,seLocation]
+  // const updateLocation = function()
+  return <button style={{backgroundColor : "aqua", outline:"none",border:"none",width:"300px",height:"50px",
+  position : 'absolute', left : location.left +"px",top: location.top+"px"}} onClick={() =>setText("I'm caught")}
+  onMouseEnter={(event) => findSafeLocation(event)}>
+    {text}
+    </button>
+}
+root.render(
+  <React.StrictMode>
+    <MakeScaredButton/>
+  </React.StrictMode>
+);
+
+// If you want to start measuring performance in your app, pass a function
+// to log results (for example: reportWebVitals(console.log))
+// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
+
